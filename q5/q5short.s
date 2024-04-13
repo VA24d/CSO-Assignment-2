@@ -24,15 +24,16 @@ loop:
     addq %r10, %rax
     movq $2, %r12
     idivq %r12
-    movq (%rdi, %rax, 8), %r14
+    movzwq (%rdi, %rax, 2), %r14
     # movq %r14, %rax
     # ret
-    cmpq %rsi, %r14
+    cmpq %rsi, %r14 # issue in compare
     jl low
     jmp greatE
 
 greatE:
     movq %rax, %rcx
+
     jmp test 
 
 low:
@@ -49,10 +50,10 @@ test:
     jmp loop
 
 return:
-    movq (%rdi, %r10, 8), %r14
+    movzwq (%rdi, %r10, 2), %r14
     cmpq %rsi, %r14
     je sel_l
-    movq (%rdi, %rcx, 8), %r14
+    movzwq (%rdi, %rcx, 2), %r14
     cmpq %rsi, %r14
     je sel_r
     
