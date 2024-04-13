@@ -1,15 +1,10 @@
 .global eval_postfix
 
-# %rdi 1st argument , %rsi 2nd argument
-# long long N,long long* post
-
 eval_postfix:
     movq $0, %r13
     movq $0, %rax
-
     movq $0, %rdx
     cqto
-
     jmp test
 
 loop:
@@ -22,18 +17,15 @@ loop:
     je sub
     cmpq $47, %r14
     je div
-
     jmp int
 
 int:
-    push %r14 # current value
-
+    push %r14
     jmp inc
 
 mult:
     pop %r8
     pop %r10
-
     imulq %r8, %r10
     push %r10
     jmp inc
@@ -41,9 +33,7 @@ mult:
 add:
     pop %r8
     pop %r10
-
     addq %r8, %r10
-
     push %r10
     jmp inc
 
@@ -52,18 +42,14 @@ sub:
     pop %r10
     subq %r8, %r10
     push %r10
-
     jmp inc
 
 div:
     pop %r8
     pop %rax
-
     movq $0, %rdx
     cqto
-
     idivq %r8
-
     push %rax
     jmp inc
 
@@ -75,7 +61,5 @@ inc:
 test:
     cmpq %rdi, %r13
     jl loop
-
     pop %rax
     ret
-

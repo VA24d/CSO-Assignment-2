@@ -1,13 +1,13 @@
 #include "stdio.h"
 #include "stdlib.h"
+#define pn printf("\n")
+
 
 extern long long int eval_postfix(long long N,long long* post);
 
 // 42  * 	asterisk
 // 43  + 	plus
-// 44  , 	comma
 // 45  - 	minus
-// 46  . 	period
 // 47  / 	slash
 
 int main()
@@ -38,7 +38,12 @@ int main()
         }
     }
 
-
+    for (int i=0; i<count; i++)
+    {
+            printf("%lld ", array[i]);
+    }
+    pn;
+    
     long long out = eval_postfix(count, array);
 
     printf("%lld\n", out);
