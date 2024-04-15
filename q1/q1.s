@@ -4,48 +4,89 @@
 # long long int *arr, int size, int minLen, int maxLen
 max_sub_sum:
     movq %rdi, %r8 # array ptr
-    movq %rsi, %r9 # size
-    movq $1, %r10
+    movq $1, %r10 # initialize count
 
-    //loop from index 1 to N-1 (considering 0 indexing)
-    addq $8, %r8
+    movq $0, %r12 # initialize prefixsum
+
     jmp prefix_test
 
 prefix_loop:
-    addq $1, %r10
-    movq -8(%r8), %r11
-    movq (%r8), %r12
-    addq %r11, %r12
+    addq (%r8), %r12
     movq %r12, (%r8)
+
     addq $8, %r8
+    addq $1, %r10
     jmp prefix_test
 
 prefix_test:
-    cmpq %r9, %r10 #loop condition 
+    cmpq %rsi, %r10 #loop condition 
     jle prefix_loop
+
     # resetting changed values
     movq %rdi, %r8 # array ptr
-    movq %rsi, %r9 # size
-    movq $1, %r10
-    # max sum in %rax
-    # current sum in %r14
-    movq %rdi+%left, %r15
-    ret
+
+
+    # setting to min length
+    movq %rdx, %r10 # count
+
+    movq $-9223372036854775808, %rax # current max
+    jmp minmax_test
+
 
 # 2 pointer method
+minmax_loop:
+    movq $1, %r14 # count
+
+    movq %rdi, %r12
+    movq %rdi, %r13
+
+    movq (%r13), %r15 # inside loop max
+
+    addq $1, %r10
+    jmp check_test
+
 check_loop:
-
-
-
-
-
-.ptr_L:
-
-.ptr_R:
+    movq (%r13), %r11
+    subq (%r12), %r11
     
+    cmpq %r15, %r11
+    jg update
+    jmp inc_inner
 
-    
+update:
+    movq %r11, %r15
+    jmp inc_inner
 
+inc_inner:
+    addq $8, %r12
+    addq $8, %r13
 
+    addq $1, %r14 # internal loop itr
+    jmp check_test
 
 check_test:
+    cmpq %r9, %r14
+    jl check_loop
+
+    cmpq %rax, %r15
+    jg update2
+
+    jmp minmax_test
+
+update2:
+    movq %r15, %rax
+    jmp minmax_test
+
+    
+minmax_test:
+    movq %rsi, %r9
+    subq %r10, %r9
+    add $1, %r9
+
+    cmpq %rcx, %r10
+    jle minmax_loop
+    
+    # movq %r10, %rax
+
+    ret
+
