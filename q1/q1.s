@@ -35,13 +35,17 @@ prefix_test:
 
 # 2 pointer method
 minmax_loop:
-    movq $1, %r14 # count
+    movq %r14, %rbx
+    imulq $8, %rbx
+    addq %rdi, %rbx
 
     movq %rdi, %r12
-    movq %rdi, %r13
+    movq %rbx, %r13
+    addq $8, %r13
 
-    movq (%r13), %r15 # inside loop max
+    movq (%rbx), %r15 # inside loop max
 
+    movq $1, %r14 # count
     addq $1, %r10
     jmp check_test
 
@@ -60,7 +64,7 @@ update:
 inc_inner:
     addq $8, %r12
     addq $8, %r13
-
+    
     addq $1, %r14 # internal loop itr
     jmp check_test
 
